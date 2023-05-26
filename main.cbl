@@ -21,7 +21,6 @@
              05 main-tape PIC S999 VALUE 0 OCCURS 200 TIMES.
 
            01 tape-pointer PIC 999.
-           01 internal-tape-pointer PIC 999.
 
            01 prog-pointer PIC 999.
 
@@ -74,16 +73,11 @@
            end-if
          .
 
-         set-internal-pointer.
-           add 1 to tape-pointer giving internal-tape-pointer *> Why? Since tape pointer cant be bigger than 99 starting at 0, internal-tape-pointer cant be bigger than 100
-         .
-
          deal-with-open-bracket.
            if bracket-skip = 1 then
                add 1 to bracket-depth giving bracket-depth
            else
-               perform set-internal-pointer.
-               if main-tape(internal-tape-pointer) = 0 then
+               if main-tape((tape-pointer + 1)) = 0 then
                    move 1 to bracket-skip
            end-if
          .
@@ -105,31 +99,26 @@
          .
 
          output-command.
-           perform set-internal-pointer.
       *>     display FUNCTION CHAR(main-tape(internal-tape-pointer))
       *>     with no advancing
-           display main-tape(internal-tape-pointer)
+           display main-tape((tape-pointer + 1))
          .
 
          input-command.
-           perform set-internal-pointer.
            accept input-char from sysin.
            move FUNCTION ORD(input-char)
-      -        to main-tape(internal-tape-pointer)
+      -        to main-tape((tape-pointer + 1))
          .
 
          remove-one-command.
-           perform set-internal-pointer.
   
-           add -1 to main-tape(internal-tape-pointer) 
-      -               giving main-tape(internal-tape-pointer)
+           add -1 to main-tape((tape-pointer + 1)) 
+      -               giving main-tape((tape-pointer + 1))
          .
 
          add-one-command.
-           perform set-internal-pointer.
-  
-           add 1 to main-tape(internal-tape-pointer) 
-      -               giving main-tape(internal-tape-pointer)
+           add 1 to main-tape((tape-pointer + 1)) 
+      -               giving main-tape((tape-pointer + 1))
          .
 
        end program brainfuck.
