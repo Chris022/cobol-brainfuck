@@ -1,7 +1,7 @@
 <h1 align="center">
   <img alt="cgapp logo" src="logo.svg" width="224px"/>
 </h1>
-<p align="center">Basic implementation of the best programming language - <b>Brainfuck</b>, written in <b>COBOL</b> </p>
+<p align="center">Basic implementation of the best programming language - <b>Brainfuck</b>, written in <b>COBOL</b><br/><b>WHY?</b> Because <b>-</b> and <b>-</b> is <b>+</b>? </p>
 
 <p align="center"><img src="https://img.shields.io/badge/COBOL-GNU-9cf?style=for-the-badge&logo=gnu" alt="cobol version" />&nbsp;<img src="https://img.shields.io/badge/license-gpl3-red?style=for-the-badge&logo=none" alt="license" /></p>
 
@@ -16,7 +16,7 @@ After starting the interpreter expects an input - the program written in brainfu
 ## 🏗️ Building
 
 For building the program first install GNU COBOL:
-### Installing
+### 📦 Installing
 Install dependencies:
 ```bash
 sudo apt-get -y install build-essential libgmp-dev libdb-dev libncurses-dev \
@@ -32,12 +32,12 @@ After installation, add the following line to the `~/.bashrc` file.
 ```bash
 export LD_LIBRARY_PATH=${LOAD_LIBRARY_PATH}:/usr/local/lib
 ```
-### Building
+### 🚧 Building
 After installing GNU COBOL this program can be build by using the following command:
 ```bash
 cobc -x main.cbl
 ```
 
-### Debuging
+### 🐞 Debuging
 For debuging I suggest the VS-Code extension called "COBOL debugger - Oleg Kunitsyn".
 Info: for this extension to work, it is required to have the GNU debugger (gdb) installed.
