@@ -123,11 +123,20 @@
          .
 
          move-forwad-command.
-           add 1 to tape-pointer giving tape-pointer
+      *>   Also implement wraping for tape
+           if tape-pointer = 998 then
+               move 0 to tape-pointer
+           else
+               add 1 to tape-pointer giving tape-pointer
+           end-if
          .
 
          move-backward-command.
-           add -1 to tape-pointer giving tape-pointer
+           if tape-pointer = 0 then
+               move 998 to tape-pointer
+           else
+               add -1 to tape-pointer giving tape-pointer
+           end-if
          .
 
          output-command.
@@ -145,14 +154,23 @@
          .
 
          remove-one-command.
-  
-           add -1 to main-tape((tape-pointer + 1)) 
+      *>   Brainfuck only allows for values between 0 and 255
+           if main-tape((tape-pointer + 1)) = 0 then
+               move 255 to main-tape((tape-pointer + 1))
+           else
+               add -1 to main-tape((tape-pointer + 1)) 
       -               giving main-tape((tape-pointer + 1))
+           end-if
          .
 
          add-one-command.
-           add 1 to main-tape((tape-pointer + 1)) 
+      *>   Brainfuck only allows for values between 0 and 255
+           if main-tape((tape-pointer + 1)) = 255 then
+               move 0 to main-tape((tape-pointer + 1))
+           else
+               add 1 to main-tape((tape-pointer + 1)) 
       -               giving main-tape((tape-pointer + 1))
+           end-if
          .
 
        end program brainfuck.
