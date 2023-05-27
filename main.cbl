@@ -15,10 +15,10 @@
            01 command PIC X.
 
            01 prog-table.
-             05 prog-tape PIC X VALUE "c" OCCURS  200 TIMES.
+             05 prog-tape PIC X VALUE "c" OCCURS  999 TIMES.
 
            01 storrage-table.
-             05 main-tape PIC S999 VALUE 0 OCCURS 200 TIMES.
+             05 main-tape PIC S999 VALUE 0 OCCURS 999 TIMES.
 
            01 tape-pointer PIC 999.
 
@@ -28,23 +28,29 @@
 
            01 bracket-skip PIC 1.
            01 bracket-depth PIC 99.
+
+           01 execute-direction PIC S9.
        procedure division.
+
+      *> default values
+
+         move +1 to execute-direction.
+         move "s" to command.
+      
+      *> read input program
 
          accept prog-table from sysin.
 
       *> run the inputed programm
 
-         perform repl-loop until (command = "c" or prog-pointer > 998).
+         perform repl-loop until (command = " " or prog-pointer > 998).
         
          goback.
 
 
          repl-loop.
            move prog-tape(prog-pointer + 1) to command.
-           add 1 to prog-pointer giving prog-pointer.
 
-           if command = "c" then
-               display "REPL ending. Press any key...".
            if command = "[" then
                perform deal-with-open-bracket
            end-if
@@ -71,22 +77,48 @@
                    perform move-forwad-command
                end-if
            end-if
+
+           add execute-direction to prog-pointer giving prog-pointer
          .
 
          deal-with-open-bracket.
-           if bracket-skip = 1 then
-               add 1 to bracket-depth giving bracket-depth
+           if execute-direction = +1 then
+               if bracket-skip = 1 then
+                   add 1 to bracket-depth giving bracket-depth
+               else
+                   if main-tape((tape-pointer + 1)) = 0 then
+                       move 1 to bracket-skip
+                       move +1 to execute-direction
+                   end-if
+               end-if
            else
-               if main-tape((tape-pointer + 1)) = 0 then
-                   move 1 to bracket-skip
+               if bracket-depth = 0 then
+                   move 0 to bracket-skip
+                   move 1 to execute-direction
+               end-if
+               if bracket-skip = 1 then
+                   add -1 to bracket-depth giving bracket-depth
+               end-if
            end-if
          .
 
          deal-with-closing-bracket.
-           if bracket-depth = 0 then
-               move 0 to bracket-skip
+           if execute-direction = +1 then
+               if not main-tape((tape-pointer + 1)) = 0 then
+                   move 1 to bracket-skip
+                   move -1 to execute-direction
+               else 
+                   if bracket-depth = 1 then
+                       add -1 to bracket-depth giving bracket-depth
+                   else
+                       move 0 to bracket-skip
+                       move 1 to execute-direction
+                   end-if
+               end-if
            else
-               add -1 to bracket-depth giving bracket-depth
+               if bracket-skip = 1 then
+                   add 1 to bracket-depth giving bracket-depth
+               end-if
            end-if
          .
 
@@ -99,15 +131,17 @@
          .
 
          output-command.
-      *>     display FUNCTION CHAR(main-tape(internal-tape-pointer))
-      *>     with no advancing
-           display main-tape((tape-pointer + 1))
+           display FUNCTION CHAR(main-tape(tape-pointer + 1) + 1)
+           with no advancing
          .
 
          input-command.
            accept input-char from sysin.
-           move FUNCTION ORD(input-char)
-      -        to main-tape((tape-pointer + 1))
+           move FUNCTION ORD(input-char) 
+      -         to main-tape((tape-pointer + 1))
+      *>   Since this great programming language starts at 1 every number has to be shifted by 1
+           add -1 to main-tape((tape-pointer + 1))
+      -        giving main-tape((tape-pointer + 1))
          .
 
          remove-one-command.
