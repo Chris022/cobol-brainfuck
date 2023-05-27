@@ -8,10 +8,8 @@
 ## ⚡️ Quick start
 Start the executable of this file simply by using
 ```bash
-./main
+./main helloworld.bf
 ```
-
-After starting the interpreter expects an input - the program written in brainfuck. Pressing enter will start the exection.
 
 ## 🏗️ Building
 
