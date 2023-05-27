@@ -10,7 +10,18 @@
 
        identification division.
          program-id. brainfuck.
+
+       environment division.
+         input-output section.
+           file-control.
+           select brainfuck-code assign to dynamic filename
+           organization is sequential.
+
        data division.
+         file section.
+           fd brainfuck-code.
+           01 brainfuck-code-file.
+              05 command-char PIC X(999).
          working-storage section.
            01 command PIC X.
 
@@ -30,6 +41,9 @@
            01 bracket-depth PIC 99.
 
            01 execute-direction PIC S9.
+
+           01 filename PIC X(30).
+
        procedure division.
 
       *> default values
@@ -37,9 +51,14 @@
          move +1 to execute-direction.
          move "s" to command.
       
-      *> read input program
+      *> get filename
+       accept filename from command-line.
 
-         accept prog-table from sysin.
+      *> read input program
+         open input brainfuck-code.
+           read brainfuck-code into prog-table
+           end-read
+         close brainfuck-code.
 
       *> run the inputed programm
 
